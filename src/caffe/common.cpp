@@ -70,7 +70,9 @@ int64_t cluster_seedgen(void) {
 
 void GlobalInit(int* pargc, char*** pargv) {
   // Google flags.
+#ifdef USE_GFLAGS
   ::gflags::ParseCommandLineFlags(pargc, pargv, true);
+#endif
   // Google logging.
   ::google::InitGoogleLogging(*(pargv)[0]);
   // Provide a backtrace on segfault.

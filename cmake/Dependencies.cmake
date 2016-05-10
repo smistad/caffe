@@ -16,17 +16,23 @@ include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
 
 # ---[ Google-gflags
-include("cmake/External/gflags.cmake")
-include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
-list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+if(BUILD_EXAMPLES OR BUILD_TOOLS)
+     include("cmake/External/gflags.cmake")
+     include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
+     list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+     add_definitions(-DUSE_GFLAGS)
+endif()
 
 # ---[ Google-protobuf
 include(cmake/ProtoBuf.cmake)
 
 # ---[ HDF5
-find_package(HDF5 COMPONENTS HL REQUIRED)
-include_directories(SYSTEM ${HDF5_INCLUDE_DIRS} ${HDF5_HL_INCLUDE_DIR})
-list(APPEND Caffe_LINKER_LIBS ${HDF5_LIBRARIES})
+if(USE_HDF5)
+     find_package(HDF5 COMPONENTS HL REQUIRED)
+     include_directories(SYSTEM ${HDF5_INCLUDE_DIRS} ${HDF5_HL_INCLUDE_DIR})
+     list(APPEND Caffe_LINKER_LIBS ${HDF5_LIBRARIES})
+     add_definitions(-DUSE_HDF5)
+endif()
 
 # ---[ LMDB
 if(USE_LMDB)

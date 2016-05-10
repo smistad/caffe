@@ -6,7 +6,9 @@
 #endif
 
 #include <boost/shared_ptr.hpp>
+#ifdef USE_GFALGS
 #include <gflags/gflags.h>
+#endif
 #include <glog/logging.h>
 
 #include <math.h>
