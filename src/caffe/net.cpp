@@ -5,7 +5,9 @@
 #include <utility>
 #include <vector>
 
+#ifdef USE_HDF5
 #include "hdf5.h"
+#endif
 
 #include "caffe/common.hpp"
 #include "caffe/layer.hpp"
@@ -795,6 +797,7 @@ void Net<Dtype>::CopyTrainedLayersFromBinaryProto(
 
 template <typename Dtype>
 void Net<Dtype>::CopyTrainedLayersFromHDF5(const string trained_filename) {
+#ifdef USE_HDF5
   hid_t file_hid = H5Fopen(trained_filename.c_str(), H5F_ACC_RDONLY,
                            H5P_DEFAULT);
   CHECK_GE(file_hid, 0) << "Couldn't open " << trained_filename;
@@ -841,6 +844,9 @@ void Net<Dtype>::CopyTrainedLayersFromHDF5(const string trained_filename) {
   }
   H5Gclose(data_hid);
   H5Fclose(file_hid);
+#else // USE_HDF5
+  LOG(FATAL) << "Caffe was built without HDF5 (USE_HDF5 OFF). Can't use HDF5 features.";
+#endif // USE_HDF5
 }
 
 template <typename Dtype>
@@ -857,6 +863,7 @@ void Net<Dtype>::ToProto(NetParameter* param, bool write_diff) const {
 
 template <typename Dtype>
 void Net<Dtype>::ToHDF5(const string& filename, bool write_diff) const {
+#ifdef USE_HDF5
   hid_t file_hid = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT,
       H5P_DEFAULT);
   CHECK_GE(file_hid, 0)
@@ -910,6 +917,9 @@ void Net<Dtype>::ToHDF5(const string& filename, bool write_diff) const {
     H5Gclose(diff_hid);
   }
   H5Fclose(file_hid);
+#else // USE_HDF5
+  LOG(FATAL) << "Caffe was built without HDF5 (USE_HDF5 OFF). Can't use HDF5 features.";
+#endif // USE_HDF5
 }
 
 template <typename Dtype>
