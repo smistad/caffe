@@ -16,9 +16,12 @@ include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
 list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
 
 # ---[ Google-gflags
-include("cmake/External/gflags.cmake")
-include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
-list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+if(BUILD_EXAMPLES OR BUILD_TOOLS)
+     include("cmake/External/gflags.cmake")
+     include_directories(SYSTEM ${GFLAGS_INCLUDE_DIRS})
+     list(APPEND Caffe_LINKER_LIBS ${GFLAGS_LIBRARIES})
+     add_definitions(-DUSE_GFLAGS)
+endif()
 
 # ---[ Google-protobuf
 include(cmake/ProtoBuf.cmake)

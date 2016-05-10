@@ -2,7 +2,9 @@
 #define CAFFE_COMMON_HPP_
 
 #include <boost/shared_ptr.hpp>
+#ifdef USE_GFALGS
 #include <gflags/gflags.h>
+#endif
 #include <glog/logging.h>
 
 #include <climits>
