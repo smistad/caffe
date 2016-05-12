@@ -4,8 +4,10 @@
 #include <string>
 #include <vector>
 
+#ifdef USE_HDF5
 #include "hdf5.h"
 #include "hdf5_hl.h"
+#endif
 
 #include "caffe/net.hpp"
 #include "caffe/proto/caffe.pb.h"
@@ -485,10 +487,15 @@ string Solver<Dtype>::SnapshotToBinaryProto() {
 
 template <typename Dtype>
 string Solver<Dtype>::SnapshotToHDF5() {
+#ifdef USE_HDF5
   string model_filename = SnapshotFilename(".caffemodel.h5");
   LOG(INFO) << "Snapshotting to HDF5 file " << model_filename;
   net_->ToHDF5(model_filename, param_.snapshot_diff());
   return model_filename;
+#else // USE_HDF5
+  LOG(FATAL) << "Caffe was built without HDF5 (USE_HDF5 OFF). Can't use HDF5 features.";
+  return "";
+#endif // USE_HDF5
 }
 
 template <typename Dtype>
